@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+<div id="app">
+    <child-component v-on:update="showAlert"></child-component>
+</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        // 이벤트 발생: 컴포넌트 통신 방법 중 하위 컴포넌트에서 상위 컴포넌트로 통신하는 방식 
+var childComponent = {
+    template: '<button v-on:click="sendEvent">child-component</button>',
+    methods: {
+        sendEvent: function(){
+            // 하위 컴포넌트 내용 
+            // this.$emit('이벤트명');
+            this.$emit('update');
+        }
+    }
+}
+
+        new Vue({
+            el: '#app',
+            components:{
+                'child-component': childComponent
+            },
+            methods: {
+                showAlert: function(){
+                    console.log('이벤트 실행')
+                    alert('event received')
+                }
+            }
+        })
+    </script>
+</body>
+</html>

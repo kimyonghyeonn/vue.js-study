@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <child1 v-on:pass="send"></child1>
+        <child2 v-bind:propsdata="num"></child2>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+// 같은 레벨의 컴포넌트끼리 데이터를 직접 주고받을수는 없기 때문에 상위 컴포넌트를 통해 주고 받아야 한다
+// 코드목표: child1을 통해 자식=>부모로 데이터를 전달 => 전달받은 데이터를 부모 컴포넌트에서 자식 컴포넌트로 다시 전달 
+
+// 2. 자식 => 부모로 데이터를 보내주는 지역 컴포넌트
+var child1 = {
+    template:'<div>send to parent<button v-on:click="sendparent">sendData</button></div>',
+    methods: {
+        sendparent: function(){
+            this.$emit('pass', 10);
+        }
+    }
+}
+
+// 3. 부모 => 자식으로 데이터를 받아오는 지역 컴포넌트
+var child2 = {
+    template:'<div>ds</div>',
+    props: ['propsdata']
+}
+
+// 1. 루트 컴포넌트 만들기
+new Vue({
+    el:'#app',
+    // 1-1. 자식컴포넌트 만들기
+    components: {
+        'child1': child1,
+        'child2': child2
+    },
+    data: {
+        num: 0
+    },
+    methods: {
+        send: function(value){
+            console.log('자식=>부모')
+            this.num = value;
+        }
+    }
+  
+})
+    </script>
+</body>
+</html>
