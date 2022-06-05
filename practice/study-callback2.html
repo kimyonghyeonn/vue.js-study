@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        // 콜백함수 주의할 점 
+        // 1. this 를 사용한 콜백함수 
+        let userData = {
+        signUp: '2020-10-06 15:00:00',
+        id: 'minidoo',
+        name: 'Not Set',
+        setName: function(firstName, lastName) {
+        this.name = firstName + ' ' + lastName;
+    }
+}
+
+function getUserName(firstName, lastName, callback){
+    callback(firstName, lastName)
+}
+
+getUserName('PARK', 'MINIDOO', userData.setName);
+
+console.log('1: ', userData.name); // Not Set
+console.log('2: ' ,window.name); // PARK MINIDOO
+// 첫번째 콘솔에서 PARK MINIDOO가 아닌 Not Set이 출력되는 이유 
+// setName() 에서 사용된 this 객체가 window 라는 글로벌 객체를 가리키기 때문이다 
+
+// 해결책: this를 보호할수 있도록 call(), apply() 를 사용한다 
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // return하지 않고 바로 new Promise를 생성했을때와 아닐경우의 차이 
+        // 1. promise를 return 하는 형태 
+        var promise1 = function(){
+            return new Promise(function(resolve, reject){
+                window.setTimeout(function(){
+                    console.log('promise1 완료')
+                     resolve('11111')
+                }, Math.random()*2000 + 1000
+                )
+            })
+        }
+
+        var promise2 = function(){
+            return new Promise(function(resolve, reject){
+                window.setTimeout(function(){
+                    console.log('promise2 완료')
+                     resolve('22222')
+                }, Math.random()*1000 + 1000
+                )
+            })
+        }
+        //  promise 객체를 return 해주는 경우 
+        Promise.all([promise1, promise2]).then(function (values){
+            console.log('모두 완료됨-1', values)
+        })
+        //  위와 같은 형태로는 all API를 사용할수 없다. promise 객체가 아니기 때문에 오류메세지가 발생한다. 따라서 정상적으로 실행하기 위해선 아래와 같이 
+        // 실행해야한다.
+        Promise.all([promise1(), promise2()]).then(function (values){
+            console.log('모두 완료됨-2', values)
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // call
+        var example = function(a,b,c){
+            return a+b+c;
+        }
+        example(1,2,3);
+        example.call(null, 1,2,3);
+        example.apply(null,1,2,3);
+        // null의 역할: this의 대체 
+
+        var obj = {
+            string: 'zero',
+            yell: function(){
+                alert(this.string);
+            }
+        }
+
+        var obj2 = {
+            string: 'what'
+        }
+
+        obj.yell(); 
+        obj.yell.call(obj2);
+    </script>
+</body>
+</html>
