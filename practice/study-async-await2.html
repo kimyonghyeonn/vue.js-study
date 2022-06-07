@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 그럼 async, await는 얼마나 직관적인가? 
+        // promise를 사용했을 경우 
+      function getApple(){
+          return new Promise(function(resolve, reject){
+              window.setTimeout(function(){
+                  console.log('getApple');
+                  resolve('apple')
+              }, 1000)
+          })
+      }
+
+      function getBanana(){
+          return new Promise(function(resolve, reject){
+              window.setTimeout(function(){
+                  console.log('getBanana');
+                  resolve('Banana')
+              }, 1000)
+          })
+      }
+
+      function getFruites(){
+          console.log('getFruites')
+          getApple()
+          .then(function(a){ // getApple의 리턴값이 resolve이기 때문에 then() 가능 
+              getBanana()
+              .then(function(b){
+                  console.log(`${a} and ${b}`)
+              })
+          })
+      }
+
+    //   getFruites()
+
+    //   위와 같이 비동기 하는 함수를 만들기 위해서는 각 함수에 return new Promise()를 일일이 생성해줘야하는 번거로움이 있음 
+    // 이와같은 문제를 해결하기 위해 프로미스 선언은 한번만 하고 각 함수에 가져다 쓰기 위해 async를 사용하면 된다
+    //  어떻게 사용하는가?
+    // 프로미스로 비동기 함수를 하나 만들어주고 동기처리를 async로 하게 하면 된다
+
+    function delay(){
+        return new Promise(function(resolve, reject){
+            console.log('delay')
+            window.setTimeout(function(){
+                resolve()
+            }, 1000)
+        })
+    }
+
+    async function getApple2(){
+        await delay();
+        return 'apple2'
+    }
+
+    async function getBanana2(){
+        await delay();
+        return 'banana2'
+    }
+
+    function getFruites2(){
+  getApple2()
+    .then((a) => { //리턴값이 곧 resolve()니까 then 가능
+      getBanana2()
+        .then((b) => console.log(`${a} and ${b}`)); 
+    }) // 콜백지옥
+    
+}
+
+// getFruites2();
+
+// 여전히 getFruites2()에서 콜백지옥이 일어나 코드가 어지럽다 
+// 생각해보면 굳이 async에서 리턴한 값(promise.resolve()) 을 then으로 처리할 필요는 없다 
+// getApple2에서 리턴한 값(promise.resolve())를 받으려면 getApple2().then((value) => {})에서 then을 통해 아규먼트로 받을수 있지만 
+// 저 value를 꺼내올수 없어서 박스에서 처리해야한다는 단점이 있다. 
+
+// 반면 await는 promise가 끝날때까지 기다리면서 끝나면 resolve값에서 값만 추출해 반환하는 특성을 가진다.
+// 따라서 let value = await getApple2(); 처럼 resolve의 값만 추출해 변수에 넣으면 매우 간단하게 내부가 아닌 외부함수내에서 처리 가능하다 
+
+// 아래 코드는 getApple2, getBanana2를 그대로 가져와서 사용한다 
+async function getFruites3(){
+    let a = await getApple2(); // 1초
+    let b = await getBanana2(); // 1초
+    console.log('getFruites3');
+    console.log('a: ' , a)
+    console.log('b: ', b)
+    console.log(`${a} and ${b}`);
+}
+
+// getFruites3();
+// console.log('getFruites3(): ' , getFruites3()) // async 키워드가 붙어있는 함수를 호출하면 promise 객체가 리턴된다. (아래 설명 참고)
+
+// 병렬처리
+// 이로써 코드가 순수 promise를 썼을때와 비교했을때 훨씬 직관적으로 바뀐것을 느낄수 있다. 
+// 하지만 문제점이 있다. 바로 각 비동기를 순차적으로 기다려야 한다는 것이다. getApple2와 getBanana2는 서로 전혀 상관관계가 없다. 따라서 이를 병렬처리 해보도록 하겠음 
+async function getFruites4(){
+    let getApplePromise = getApple2();
+    let getBananaPromise = getBanana2(); // promise 객체로 감싸진 결과값을 받음(이유: async로 키워드를 선언했기 때문)
+
+    let a = await getApplePromise; // 리턴으로 받은 프로미스 객체를 await로 빼서 변수에 넣음
+    let b = await getBananaPromise;
+    console.log('getFruites4');
+    console.log('getApple2: ' , getApple2())
+    console.log('getBanana2: ' , getBanana2())
+    console.log(`${a} and ${b}`);
+}
+
+getFruites4();
+
+
+
+// 다시 async, await 정리 
+// 1. await 키워드는 async 키워드가 붙어있는 함수 내부에서만 사용할수 있고, 비동기 함수가 리턴하는 promise로부터 결과값을 추출해줌 
+// 2. await 키워드를 사용하면 일반 비동기처리처럼 바로 실행이 다음 라인으로 넘어가는것이 아니라 결과값을 얻을수 있을때까지 기다린다. 
+// 3. 따라서 일반적인 동기 코드 처리와 동일한 흐름으로 (함수 호출 => 결과값을 변수에 할당하는 식) 코드를 작성할수 있고, 읽기도 수월해짐
+// 4. async 키워드가 붙어있는 함수를 호출하면 명시적으로 promise 객체를 생성하여 리턴하지 않아도 promise 객체가 리턴된다. 
+    </script>
+</body>
+</html>

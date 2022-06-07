@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // async, await 의 예외처리 
+        // try ... catch 문을 사용한다
+        async function test1 (){
+            throw 'error'
+        }
+
+        test1()
+        .then(function(n){
+            console.log('then: ' ,n)
+        })
+        .catch(function(n){
+            console.log('catch: ' ,n)
+        })
+
+         function test2(){
+            return new Promise(function(resolve, reject){
+                reject('error!')
+            }, 1000)
+        }
+
+        async function test3(){
+            try{
+                console.log('test3-try')
+                await test2();
+            }
+            catch(e){
+                console.log('test3-catch')
+                console.error(e);
+            }
+        }
+
+        test3()
+
+
+    </script>
+</body>
+</html>

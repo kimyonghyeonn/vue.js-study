@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // ES7에서 async, await 구문을 추가하여 비동기식 콜백함수, Promise를 좀 더 쉽게 작성할수 있게 됨 
+        // 기존의 promise 사용법 
+        var promise1 = function(){
+            return new Promise(function(resolve, reject){
+                window.setTimeout(function(){
+                    console.log('11111')
+                    resolve('promise1-resolve')
+                }, Math.random()*2000 + 1000)
+            })
+        } // 이런식으로 Promise 객체를 반환 
+        // 또는 
+        var promise2 = new Promise(function(resolve, reject){
+            window.setTimeout(function(){
+                    console.log('11111')
+                    resolve('promise2-resolve')
+                }, Math.random()*2000 + 1000)
+        })
+
+        var promise3 = Promise.resolve('promise3-resolve') // 오직 resolve만 반환할 경우 이런식으로 축약
+        // 이런식으로 작성한다
+        console.log(promise1())
+        console.log(promise2)
+        console.log(promise3)
+        // 콘솔로 찍어보면 Promise 객체를 반환하는것을 확인할수 있다. 
+
+        // async, await을 사용할 경우 
+        async function asyncTest(){
+            return 'asyncTest'
+        }
+
+        console.log(asyncTest()) // async 또한 Promise 객체를 반환하는것을 확인 가능 
+
+// 그래서 왜 async, await인가 
+// 자바스크립트는 싱글스레드(한번에 하나의 작업만 수행)하는 언어기 때문에 비동기 처리가 필요하다. 비동기처리를 하는 기법은 대표적으로 setTimeout, callback, promise
+// 가 있다. 하지만 콜백은 콜백지옥과 코드의 유지보수면에서 더 많은 시간과 노력이 필요하고, promise는 코드가 직관적이지 않다
+// 기타 여러가지 단점들이 있지만 내가 생각했을때 뽑은 단점은 이정도
+// 위와 같은 단점들을 극복하기 위해 async, await를 써서 위의 문제를 해결함과 동시에 사용법도 훨씬 단순해졌다.
+
+// async 문법
+async function asyncTest2(){ // async를 지정해주면 promise를 리턴하는 함수로 만들어준다 
+    return 'this is async' 
+}
+console.log(asyncTest2()) // Promise {<fulfilled>: 'this is async'} 
+    // 이처럼 함수에 async만 붙이면 자동 Promise 객체로 인식된다.
+
+    // 또는 아래와 같이 직관적으로 Promise 메서드를 줘도 된다.
+    async function asyncTest3(){
+        return Promise.resolve('this is async resolve') // reject도 가능
+    }
+
+    console.log(asyncTest3())
+
+    // async, await 정리 
+    // async와 await 는 절차적 언어에서 작성하는 코드와 같이 사용법도 간단하다 
+    // function 키워드 앞에 async만 붙여주고 비동기 처리 되는 부분 앞에 await 만 붙여주면 된다. 
+    // async가 붙은 함수는 promise를 반환하고 promise가 아닌것은 promise로 감싸서 반환한다 
+    // await 키워드를 만나면 promise가 처리(settled)될때까지 기다린다.
+    // 그리고 promise가 처리 완료되어 resolve 되면 값만 따로 추출해서 리턴한다 
+    //  await는 promise.then 보다 직관적으로 promise의 result 값을 얻을수 있도록 해주는 문법이다.
+    // 기존에는 promise에 직접 .then()을 통해 동기처리를 했지만 await를 사용하면 바로 동기처리가 된다.
+
+    
+
+
+        
+
+    </script>
+</body>
+</html>

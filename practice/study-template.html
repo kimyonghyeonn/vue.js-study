@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <p>{{msg}}</p>
+    </div>
+<br>
+    <div id="app1">
+        <span v-html="rawHtml"></span>
+    </div>
+<br>
+    <div id="app2" v-bind:id="tempId">
+        <!-- 디렉티브: v-접두사가 있는 특수 속성을 의미, 디렉티브 속성값은 단일 javascript 표현식이 된다.(v-for은 예외)
+        디렉티브의 역할은 표현식의 값이 변결될때 사이드이펙트 반응적으로 DOM에 적용하는것을 의미함. 
+        아래에서 쓰인 v-if, v-else는 seen이 true일때만 보여주고, false일때는 제거한다. -->
+        <p v-if="seen">you can see me</p>
+        <p v-else>you can't see me</p>
+    </div>
+<br>
+<div id="app3">
+    <a v-bind:href="url">naver</a>
+    <a v-on:click="doSomething">press button</a>
+    <!-- v-bind 약어 정리 -->
+    <a v-bind:href="url"></a>
+    <a :href="url"></a>
+    <a :[key]="url"></a>
+    <!-- v-on 약어 정리 -->
+    <a v-on:click="doSomething"></a>
+    <a @click="doSomething"></a>
+    <a @[event]="doSomething"></a>
+</div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        // vue.js 템플릿 문법에 대한 간단한 설명 
+        // 1. 보간법: 데이터 바인딩의 가장 기본 형태는 Mustache 구문(이중 중괄호)을 사용한 텍스트 보간이다.
+         var app = new Vue({
+            el: '#app',
+            data: {
+                msg: 'test'
+            }
+        })
+
+        // 2.원시(Raw) HTML: 이중 중괄호는 HTML이 아닌 일반 텍스트로 데이터를 해석함, 실제 HTML을 출력하려면 v-html 디렉티브를 사용해야함 
+        // 주의: 웹사이트에서 임의의 HTML을 동적으로 렌더링하려면 XSS취약점으로 쉽게 이어질수 있어 위험할 가능성이 있음, 신뢰할수 있는 콘텐츠에서만 html보간을 사용하고
+        // 사용자가 제공한 콘텐츠에서는 절대 사용해서는 안됨 
+        var app1 = new Vue({
+            el:'#app1',
+            data: {
+                rawHtml:'<span style="color: red">This should be red.</span>'
+            }
+        })
+
+        // 3. 속성: Mustaches에서는 HTML속성을 사용할수 없음, 대신 v-bind 디렉티브를 사용할수 있다.
+        var app2 = new Vue({
+            el:'#app2',
+            data: {
+                tempId: 'tempId',
+                seen: true
+            }
+        })
+
+        // 4. 전달인자(Arguments): 일부 디렉티브 콜론으로 표시되는 전달인자를 사용할수 있음, 예를들어 v-bind는 반응적으로 html 속성을 갱신하는데 사용한다.
+        var app3 = new Vue({
+            el:'#app3',
+            data: {
+                url: 'https://m.naver.com/'
+            },
+            methods: {
+                doSomething(){
+                    alert('메소드 실행')
+                }
+            }
+
+        })
+    </script>
+</body>
+</html>

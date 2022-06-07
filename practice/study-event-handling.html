@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="example1">
+        <button v-on:click="clickMe">press Button</button>
+        <p>위 버튼을 클릭한 횟수는 {{counter}}번 입니다.</p>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        // 이벤트 핸들링
+        // 1. 이벤트 청취: v-on 디렉티브를 사용하여 DOM 이벤트를 듣고 트리거될때 javascript를 실행할수 있다.
+        var example1 = new Vue({
+            el:'#example1',
+            data: {
+                counter: 0,
+            },
+            methods:{
+                clickMe: function(){
+                    alert('press button!')
+                    this.counter += 1;
+                }
+            }
+        })
+    </script>
+</body>
+</html>
