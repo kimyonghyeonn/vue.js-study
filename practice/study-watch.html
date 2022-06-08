@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <div id="example">
+        <p>{{fullName}}</p>
+        <button @click="firstName = 'John'">change-firstName</button>
+        <button @click="lastName = 'Doe'">change-lastName</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        // watch
+        // watch 속성은 이름 그대로 감시자같은 역할을 한다. 데이터의 변경을 감지하여 실행하는 특징이 있음 
+        // 사용방법: 아래 예제와 마찬가지로 watch 안에 데이터명을 입력하여 데이터 변경감지를 해서 처리하면 된다 
+        var vm = new Vue({
+            el:'#example',
+            data:{
+                firstName: 'Foo',
+                lastName: 'Bar',
+                fullName: 'Foo Bar'
+            },
+            watch: {
+                firstName: function(val){ // firstName: 변경감지를 하는 데이터명
+                    console.log('change-firstName')
+                    this.fullName = val + '' + this.lastName
+                },
+                lastName: function(val){
+                    console.log('change-lastName')
+                    this.fullName = this.firstName + '' + val
+                }
+            }
+        })
+        
+    </script>
+</body>
+</html>

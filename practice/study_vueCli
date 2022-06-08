@@ -1,0 +1,19 @@
+vue Cli에 대한 간단한 개요 및 설치방법(Mac 기준)
+
+Vue Cli란?
+기본 vue 개발환경을 설정해주는 도구, vue cli가 기본적인 세팅을 해주기 때문에 폴더구조에 대한 고민 , lint, buiild 어떤 라이브러리로 구성해야 되는지에 대한
+고민을 덜 수 있음 
+
+Cli란?
+명령어 줄 인터페이스(Command line Interface), 텍스트 터미널을 통해 사용자와 컴퓨터가 상호작용하는 방식을 의미 
+
+vue-cli 설치
+새 터미널 => npm install -g @vue/cli
+
+vue-cli에서 프로젝트 생성 
+명령어: vue create 프로젝트명 
+
+프로젝트 생성 후 해당 프로젝트 폴더로 이동 => 명령어를 이용해 dev 서버 실행 
+1. cd 프로젝트 폴더 위치
+2. npm run serve 
+3. 로컬호스트 주소로 들어가지면 성공

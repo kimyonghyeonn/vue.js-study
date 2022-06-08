@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="example">
+        <p>원본 메세지: {{message}}</p>
+        <p>역순으로 표시한 메세지: {{reversedMessage}}</p>
+    </div>
+
+    <div id="example1">
+        <p>computed: {{computedCount}}</p>
+        <p>method: {{methodsCount()}}</p>
+        <button @click="count1++">computedCount</button>
+        <button @click="count2++">methodsCount</button>
+    </div>
+
+    <div id="example2">
+        <p>{{fullName}}</p>
+        <button @click='fullName='></button>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        // 1. computed
+        var vm = new Vue({
+            el: '#example',
+            data:{
+                message:'안녕하세요'
+            },
+            computed: {
+                reversedMessage: function(){
+                    return this.message.split('').reverse().join('')
+                }
+            }
+        })
+
+        // 얼핏보면 computed는 methods와 다를바 없어보인다. 하지만 여기서 차이점은 computed의 경우 message 값이 변경될때마다 reversedMessage가 실행된다.
+        // 다시 말하자면 reversedMessage는 message에 의존하는 상태이다 
+        // Computed가 바라보는 Vue(여기서는 example)에 선언한 Data(message)가 변해야지만 값이 변하는 메서드이고, Methods는 매서드를 호출할때마다 계산해서 
+        // 처리한다.
+        
+        // 1-1. computed의 특징: computed 캐싱 
+        var vm1 = new Vue({
+            el: '#example1',
+            data:{
+                count1: 0,
+                count2: 0,
+            },
+            computed: {
+                computedCount: function(){
+                    console.log('computed 감지')
+                    return this.count1
+                }
+            },
+            methods: {
+                methodsCount: function(){
+                    console.log('methods 감지')
+                    return this.count2
+                }
+            }
+        })
+        // 해당 로직을 실행하면 computed는 methodsCount의 콘솔까지 같이 찍히게 된다. 왜 그럴까?
+        // 앞서 말했듯이 computed 속성은 종속 대상을 따라 저장(캐싱)되는 특징을 가지고 있어서 그렇다. 
+        // methods의 경우 종속관계가 아니기 때문에 vue에서 데이터가 바뀔때마다 재렌더링 되는데 그때마다 실행되는 것이다. 
+
+        // 1-2. computed getter/setter 함수
+        //  computed 속성은 기본적으로 getter 함수만 가지고 있으나 필요에 따라 setter 함수를 만들어 사용할수 있다. 
+        var vm2 = new Vue({
+            el:'#example2',
+            data:{
+                firstName: 'Foo',
+                lastName: 'Bar'
+            },
+            computed: {
+                fullName:{
+                    get: function(){
+                        return this.firstName+ ' ' + this.lastName
+                    },
+                    set: function(newValue){
+                        var names = newValue.split('')
+                        this.firstName = names[0]
+                        this.lastName = names[names.length - 1 ]
+                    } 
+                }
+            }
+        })
+    </script>
+
+</body>
+</html>
