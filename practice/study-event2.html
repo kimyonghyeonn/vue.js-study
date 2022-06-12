@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <!-- child 버튼에서 클릭 이벤트 발생시 sendEvent => update라는 이벤트가 발생 
+        => 이를 상위 컴포넌트인 루트 컴포넌트에서 v-on의 디렉티브로 이벤트를 받아서 showAlert를 실행하게 된다. -->
+        <child v-on:update="showAlert"></child>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        // 2. 자식 컴포넌트를 구성
+        var child = {
+            // v-on을 사용해서 클릭이벤트 발생시 자식 컴포넌트의 sendEvent 실행
+            template: '<button v-on:click="sendEvent">show alert</button>',
+            methods: {
+                sendEvent: function(){
+                    console.log('sendEvent')
+                    // 이벤트 emit: 하위 컴포넌트 => 상위 컴포넌트로 이벤트를 전달하기 위한 방식, 
+                    // 이벤트를 전달해서 상위 컴포넌트는 하위 컴포넌트에서 전달하는 값을 받을수 있다.
+                    this.$emit('update');
+                }
+            }
+        }
+
+        // 1. 루트 컴포넌트를 먼저 구성
+        new Vue({
+            el: '#app',
+            components: {
+                'child': child
+            },
+            methods: {
+                showAlert: function(){
+                    console.log('showAlert is work')
+                    alert('show alert')
+                }
+            }
+        })
+    </script>
+</body>
+</html>
